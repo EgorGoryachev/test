@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Auth</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div id="g_id_onload"
+         data-client_id="112591670230-m03shpekba55qsvcvbvots1fe9fskh90.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse"
+         data-context="signin">
+    </div>
+    <div class="g_id_signin" data-type="standard"></div>
+
+    <script>
+        function handleCredentialResponse(response) {
+            // Отправляем данные авторизации в бот
+            const chatId = new URLSearchParams(window.location.search).get('chatId');
+            const botToken = 'YOUR_BOT_TOKEN'; // Замените на токен вашего бота
+
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: `Google Auth Success! Credential: ${response.credential}`
+                })
+            }).then(() => {
+                window.close(); // Закрываем окно после отправки
+            });
+        }
+    </script>
+</body>
+</html>
