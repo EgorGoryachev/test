@@ -16,7 +16,7 @@
         function handleCredentialResponse(response) {
             // Отправляем данные авторизации в бот
             const chatId = new URLSearchParams(window.location.search).get('chatId');
-            const botToken = 'YOUR_BOT_TOKEN'; // Замените на токен вашего бота
+            const botToken = '7054929055:AAErgjet1XUHU6WTNBnTgnNyrclzvmg-3og'; // Замените на токен вашего бота
 
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: 'POST',
