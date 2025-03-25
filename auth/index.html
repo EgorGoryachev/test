@@ -5,16 +5,17 @@
 </head>
 <body>
     <script>
-        // Извлекаем параметры из URL
-        const params = new URLSearchParams(window.location.hash.substring(1));
-        const access_token = params.get('access_token');
+        // Правильный способ извлечения параметров из query string
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code');
         const state = params.get('state');
 
-        if (access_token && state) {
-            // Отправляем данные обратно в бот
+        if (code && state) {
+            // Отправляем код авторизации (не access_token!) на сервер
             const [chatId, sessionId] = state.split(':');
             const botToken = '7054929055:AAErgjet1XUHU6WTNBnTgnNyrclzvmg-3og';
 
+            // Отправляем код, а не токен (токен будет получен сервером)
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: 'POST',
                 headers: {
@@ -22,13 +23,20 @@
                 },
                 body: JSON.stringify({
                     chat_id: chatId,
-                    text: `Google Auth Success! Token: ${access_token}`
+                    text: `Google Auth Code Received! Code: ${code}`
                 })
             }).then(() => {
                 window.close();
+            }).catch(error => {
+                document.body.innerHTML = `<p>Ошибка отправки: ${error.message}</p>`;
             });
         } else {
-            document.body.innerHTML = '<p>Ошибка авторизации</p>';
+            // Добавим отладочную информацию
+            document.body.innerHTML = `
+                <p>Ошибка авторизации</p>
+                <p>Полный URL: ${window.location.href}</p>
+                <p>Параметры: ${window.location.search}</p>
+            `;
         }
     </script>
 </body>
