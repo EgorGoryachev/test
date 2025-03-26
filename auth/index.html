@@ -13,7 +13,7 @@
         if (code && state) {
             // Отправляем код авторизации (не access_token!) на сервер
             const [chatId, sessionId] = state.split(':');
-            const botToken = '7054929055:AAErgjet1XUHU6WTNBnTgnNyrclzvmg-3og';
+            const botToken = '7796170704:AAH8La6nGTCf_zd_KrHMSJObrQ5P4HYuMT4';
 
             // Отправляем код, а не токен (токен будет получен сервером)
             fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
