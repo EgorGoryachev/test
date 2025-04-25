@@ -37,7 +37,7 @@
     } else {
         // Добавим отладочную информацию
         document.body.innerHTML = `
-            <p>Ошибка авторизации</p>
+            <p>Ошибка авторизации</p> ${error.message}</p>
             <p>Полный URL: ${window.location.href}</p>
             <p>Параметры: ${window.location.search}</p>
         `;
