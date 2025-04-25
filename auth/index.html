@@ -4,40 +4,44 @@
     <title>Google Auth Callback</title>
 </head>
 <body>
-    <script>
-        // Правильный способ извлечения параметров из query string
-        const params = new URLSearchParams(window.location.search);
-        const code = params.get('code');
-        const state = params.get('state');
+   <script>
+    // Правильный способ извлечения параметров из query string
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const state = params.get('state');
 
-        if (code && state) {
-            // Отправляем код авторизации (не access_token!) на сервер
-            const [chatId, sessionId] = state.split(':');
-            const botToken = ''
+    if (code && state) {
+        // Отправляем данные на Flask-сервер
+        const [chatId, sessionId] = state.split(':');
 
-            // Отправляем код, а не токен (токен будет получен сервером)
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: `Google Auth Code Received! Code: ${code}`
-                })
-            }).then(() => {
+        fetch('/api/send-auth-code', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                chat_id: chatId,
+                auth_code: code
+            })
+        }).then(response => {
+            if (response.ok) {
                 window.close();
-            }).catch(error => {
-                document.body.innerHTML = `<p>Ошибка отправки: ${error.message}</p>`;
-            });
-        } else {
-            // Добавим отладочную информацию
-            document.body.innerHTML = `
-                <p>Ошибка авторизации</p>
-                <p>Полный URL: ${window.location.href}</p>
-                <p>Параметры: ${window.location.search}</p>
-            `;
-        }
-    </script>
+            } else {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error || 'Ошибка при отправке данных');
+                });
+            }
+        }).catch(error => {
+            document.body.innerHTML = <p>Ошибка отправки: ${error.message}</p>;
+        });
+    } else {
+        // Добавим отладочную информацию
+        document.body.innerHTML = `
+            <p>Ошибка авторизации</p>
+            <p>Полный URL: ${window.location.href}</p>
+            <p>Параметры: ${window.location.search}</p>
+        `;
+    }
+</script>
 </body>
 </html>
