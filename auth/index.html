@@ -32,7 +32,7 @@
                 });
             }
         }).catch(error => {
-            document.body.innerHTML = <p>Ошибка отправки: ${error.message}</p>;
+            document.body.innerHTML = `<p>Ошибка отправки: ${error.message}</p>`;
         });
     } else {
         // Добавим отладочную информацию
