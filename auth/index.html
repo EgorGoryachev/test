@@ -14,7 +14,7 @@
         // Отправляем данные на Flask-сервер
         const [chatId, sessionId] = state.split(':');
 
-        fetch('/api/send-auth-code', {
+        fetch('https://telegramassistantserver.onrender.com/api/send-auth-code', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
